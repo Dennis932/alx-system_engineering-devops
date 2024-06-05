@@ -1,30 +1,17 @@
 #!/usr/bin/python3
-'''A module containing functions for working with the Reddit API.
-'''
-import requests
+"""Module for task 0"""
 
-
-import requests
 
 def number_of_subscribers(subreddit):
-    """
-    Queries the Reddit API and returns the number of subscribers for a given subreddit.
-    If the subreddit is invalid, returns 0.
-    """
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
-    headers = {'User-Agent': 'Mozilla/5.0 (compatible; MyRedditClient/1.0)'}
-    
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        if response.status_code == 200:
-            data = response.json()
-            return data['data']['subscribers']
-        else:
-            return 0
-    except Exception as e:
+    """Queries the Reddit API and returns the number of subscribers
+    to the subreddit"""
+    import requests
+
+    sub_info = requests.get("https://www.reddit.com/r/{}/about.json"
+                            .format(subreddit),
+                            headers={"User-Agent": "My-User-Agent"},
+                            allow_redirects=False)
+    if sub_info.status_code >= 300:
         return 0
 
-# Example usage
-subreddit_name = "python"
-subscribers = number_of_subscribers(subreddit_name)
-print(f"Number of subscribers in r/{subreddit_name}: {subscribers}")
+    return sub_info.json().get("data").get("subscribers")
